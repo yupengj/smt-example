@@ -69,8 +69,11 @@ dependencies {
 
     // Retrieve Z3 with Maven but without a pom.xml, just the artifacts
     runtimeOnly group: 'org.sosy-lab', name: 'javasmt-solver-z3', version: version.z3, classifier: 'com.microsoft.z3', ext: 'jar'
-    runtimeOnly group: 'org.sosy-lab', name: 'javasmt-solver-z3', version: version.z3, classifier: 'libz3', ext: 'dylib'
-    runtimeOnly group: 'org.sosy-lab', name: 'javasmt-solver-z3', version: version.z3, classifier: 'libz3java', ext: 'dylib'
+//    runtimeOnly group: 'org.sosy-lab', name: 'javasmt-solver-z3', version: version.z3, classifier: 'libz3', ext: 'dylib'
+//    runtimeOnly group: 'org.sosy-lab', name: 'javasmt-solver-z3', version: version.z3, classifier: 'libz3java', ext: 'dylib'
+
+    runtimeOnly fileTree(dir: 'lib', include: ['*.dylib'])
+
 
     // Kotlin version as an alternative. Both should be equal
 //    runtimeOnly("org/sosy-lab:javasmt-solver-z3:${version.z3}:com.microsoft.z3@jar")
@@ -127,6 +130,7 @@ task copyDependencies(type: Copy) {
     into 'build/dependencies'
     // Renames the dependencies
     rename '.*(lib[^-]*)-?.*.so', '$1.so'
+    rename '.*(lib[^-]*)-?.*.dylib', '$1.dylib'
 }
 
 // Cleans the dependencies folder
