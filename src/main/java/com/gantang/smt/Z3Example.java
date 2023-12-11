@@ -33,9 +33,10 @@ public class Z3Example {
         Configuration config = Configuration.defaultConfiguration();
         LogManager logger = BasicLogManager.create(config);
         ShutdownNotifier notifier = ShutdownNotifier.createDummy();
-        SolverContextFactory.Solvers z3 = SolverContextFactory.Solvers.Z3;
+//        SolverContextFactory.Solvers z3 = SolverContextFactory.Solvers.Z3;
+        SolverContextFactory.Solvers smtinterpol = SolverContextFactory.Solvers.SMTINTERPOL;
 
-        SolverContext context = SolverContextFactory.createSolverContext(config, logger, notifier, z3);
+        SolverContext context = SolverContextFactory.createSolverContext(config, logger, notifier, smtinterpol);
         ProverEnvironment prover = context.newProverEnvironment(SolverContext.ProverOptions.GENERATE_MODELS
                 , SolverContext.ProverOptions.GENERATE_UNSAT_CORE, SolverContext.ProverOptions.GENERATE_ALL_SAT);
         FormulaManager formulaManager = context.getFormulaManager();
