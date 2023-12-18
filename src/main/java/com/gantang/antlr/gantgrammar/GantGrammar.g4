@@ -1,9 +1,5 @@
 grammar GantGrammar;
 
-@header {
-    package com.gantang.grammar.parser;
-}
-
 EQUIVALENCE : '<=>';
 IMPLICATION : '=>';
 AND : '&';
