@@ -51,18 +51,17 @@ boolcalceexpression : boolexpression (EQUIVALENCE|IMPLICATION) boolexpression   
     ;
 
 // 布尔表达式
-boolexpression : calcexpression ((GE|GT|LE|LT|EQUAL|NOTEQUAL) calcexpression)+                      #BoolVar
+boolexpression : calcexpression (GE|GT|LE|LT|EQUAL|NOTEQUAL) calcexpression                         #BoolVar
     | NOT boolexpression                                                                            #BoolVar
     | '(' boolexpression ')'                                                                        #BoolVar
     | boolexpression (AND) boolexpression                                                           #BoolVar
     | boolexpression (OR) boolexpression                                                            #BoolVar
-    | calcexpression ('[' NUMBER '~' NUMBER ']')                                                    #BoolAndRangeVar
+    | calcexpression ('[' calcexpression '~' calcexpression ']')                                    #BoolAndRangeVar
     | calcexpression ('[' calcexpression (',' calcexpression)* ']')                                 #BoolOrArrayVar
-    | calcexpression IN ('[' calcexpression (',' calcexpression)* ']')                              #BoolOrArrayVar
     ;
 
 //数值： 正整数
-NUMBER : [0-9]+;
+NUMBER : [0-9.]+;
 //变量：是字母、数字、'_'的组合
 VAR : [a-zA-Z0-9_.]+;
 //丢弃空白字符

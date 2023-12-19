@@ -14,6 +14,7 @@ import org.sosy_lab.java_smt.api.IntegerFormulaManager;
 import org.sosy_lab.java_smt.api.Model;
 import org.sosy_lab.java_smt.api.NumeralFormula;
 import org.sosy_lab.java_smt.api.ProverEnvironment;
+import org.sosy_lab.java_smt.api.RationalFormulaManager;
 import org.sosy_lab.java_smt.api.SolverContext;
 import org.sosy_lab.java_smt.api.SolverException;
 
@@ -34,6 +35,19 @@ public class Z3Example {
         FormulaManager formulaManager = context.getFormulaManager();
         IntegerFormulaManager intFm = formulaManager.getIntegerFormulaManager();
         BooleanFormulaManager boolFm = formulaManager.getBooleanFormulaManager();
+
+//        FloatingPointFormulaManager floatingPointFormulaManager = formulaManager.getFloatingPointFormulaManager();
+//        FloatingPointFormula xa = floatingPointFormulaManager.makeNumber("4.2", FormulaType.FloatingPointType.getSinglePrecisionFloatingPointType());
+//        FloatingPointFormula xb = floatingPointFormulaManager.makeNumber("4.2", FormulaType.FloatingPointType.getSinglePrecisionFloatingPointType());
+//        FloatingPointFormula xc = floatingPointFormulaManager.makeNumber("5.2", FormulaType.FloatingPointType.getSinglePrecisionFloatingPointType());
+
+        RationalFormulaManager rationalFormulaManager = formulaManager.getRationalFormulaManager();
+        NumeralFormula.RationalFormula xa = rationalFormulaManager.makeNumber("4.2");
+        NumeralFormula.RationalFormula xb = rationalFormulaManager.makeNumber("4.2");
+        NumeralFormula.RationalFormula xc = rationalFormulaManager.makeNumber("5.2");
+        NumeralFormula.RationalFormula add = rationalFormulaManager.add(xa, xb);
+        prover.addConstraint(rationalFormulaManager.greaterOrEquals(add, xc));
+        isUnsat(prover);
 
         // 创建x变量
         NumeralFormula.IntegerFormula x = intFm.makeVariable("x");
