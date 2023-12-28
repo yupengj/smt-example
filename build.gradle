@@ -125,15 +125,15 @@ test {
 // This is necassary as Gradle renames the JavaSMT dependencies, but we need them to have certain names,
 // and they need to be in a specific location for JavaSMT to be found (the easiest ist the same folder)
 // For more information about this look up the sosy-commons loading process
-//task copyDependencies(type: Copy) {
-//    // Delete old dependencies as they might cause trouble
-//    dependsOn 'cleanDownloadedDependencies'
-//    from configurations.javaSMTConfig
-//    into 'build/dependencies'
-//    // Renames the dependencies
+task copyDependencies(type: Copy) {
+    // Delete old dependencies as they might cause trouble
+    dependsOn 'cleanDownloadedDependencies'
+    from configurations.javaSMTConfig
+    into 'build/dependencies'
+//     Renames the dependencies
 //    rename '.*(lib[^-]*)-?.*.so', '$1.so'
-//    rename '.*(lib[^-]*)-?.*.dylib', '$1.dylib'
-//}
+    rename '.*(lib[^-]*)-?.*.dylib', '$1.dylib'
+}
 
 // Cleans the dependencies folder
 task cleanDownloadedDependencies(type: Delete) {
@@ -141,7 +141,7 @@ task cleanDownloadedDependencies(type: Delete) {
 }
 
 // Copy the JavaSMT depdendencies before using them, to do this we declare a dependency on the copy task of ours here
-//compileJava.dependsOn copyDependencies
+compileJava.dependsOn copyDependencies
 
 // When clean is called we want to delete our copied JavaSMT files
 clean.dependsOn cleanDownloadedDependencies
@@ -154,7 +154,7 @@ distZip.setDuplicatesStrategy(DuplicatesStrategy.INCLUDE)
 // Note: the classpath will assume that the dependencies are in the same folder as the jar!
 jar {
     manifest {
-        attributes 'Main-Class': 'com.gantang.smt.AllSatExample'
+//        attributes 'Main-Class': 'com.gantang.smt.AllSatExample'
         attributes 'Class-Path': configurations.javaSMTConfig.files.collect { it.getName() }.join(' ')
     }
 }
