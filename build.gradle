@@ -40,16 +40,16 @@ repositories {
         }
     }
     // Ivy can be used as well
-    ivy {
-        url "https://www.sosy-lab.org/ivy"
-        patternLayout {
-            artifact "/[organisation]/[module]/[classifier]-[revision].[ext]"
-            // ivy "/[organisation]/[module]/ivy-[revision].xml"
-        }
-        metadataSources {
-            artifact()
-        }
-    }
+//    ivy {
+//        url "https://www.sosy-lab.org/ivy"
+//        patternLayout {
+//            artifact "/[organisation]/[module]/[classifier]-[revision].[ext]"
+//            // ivy "/[organisation]/[module]/ivy-[revision].xml"
+//        }
+//        metadataSources {
+//            artifact()
+//        }
+//    }
 }
 
 configurations {
@@ -62,20 +62,39 @@ configurations {
 // You can manage the JavaSMT dependencies via a config if you need to split them from your regular dependencies
 dependencies {
     // JUnit 4
-    testImplementation "junit:junit:${version.junit4}"
+//    testImplementation "junit:junit:${version.junit4}"
 
-    implementation 'org.antlr:antlr4-runtime:4.9.3'
+//    implementation 'org.antlr:antlr4-runtime:4.9.3'
 
     // Retrieve JavaSMT with Maven and transitive dependencies via a pom.xml
     implementation "org.sosy-lab:java-smt:${version.javasmt}"
 
+    // z3 mac m1
     // Retrieve Z3 with Maven but without a pom.xml, just the artifacts
     runtimeOnly group: 'org.sosy-lab', name: 'javasmt-solver-z3', version: version.z3, classifier: 'com.microsoft.z3', ext: 'jar'
+    runtimeOnly fileTree(dir: 'lib', include: ['*.dylib'])
+//    runtimeOnly group: 'org.sosy-lab', name: 'javasmt-solver-z3', version: version.z3, classifier: 'libz3', ext: 'mdylib'
+//    runtimeOnly group: 'org.sosy-lab', name: 'javasmt-solver-z3', version: version.z3, classifier: 'libz3java', ext: 'mdylib'
+    runtimeOnly fileTree(dir: 'lib', include: ['*.dylib'])
+
+    // z3 mac x86
+    // Retrieve Z3 with Maven but without a pom.xml, just the artifacts
+//    runtimeOnly group: 'org.sosy-lab', name: 'javasmt-solver-z3', version: version.z3, classifier: 'com.microsoft.z3', ext: 'jar'
 //    runtimeOnly group: 'org.sosy-lab', name: 'javasmt-solver-z3', version: version.z3, classifier: 'libz3', ext: 'dylib'
 //    runtimeOnly group: 'org.sosy-lab', name: 'javasmt-solver-z3', version: version.z3, classifier: 'libz3java', ext: 'dylib'
 
-    runtimeOnly fileTree(dir: 'lib', include: ['*.dylib'])
+    // z3 win
+//    runtimeOnly group: 'org.sosy-lab', name: 'javasmt-solver-z3', version: version.z3, classifier: 'com.microsoft.z3', ext: 'jar'
+//    runtimeOnly group: 'org.sosy-lab', name: 'javasmt-solver-z3', version: version.z3, classifier: 'libz3', ext: 'dll'
+//    runtimeOnly group: 'org.sosy-lab', name: 'javasmt-solver-z3', version: version.z3, classifier: 'libz3java', ext: 'dll'
 
+    // z3 linux
+//    runtimeOnly group: 'org.sosy-lab', name: 'javasmt-solver-z3', version: version.z3, classifier: 'com.microsoft.z3', ext: 'jar'
+//    runtimeOnly group: 'org.sosy-lab', name: 'javasmt-solver-z3', version: version.z3, classifier: 'libz3', ext: 'so'
+//    runtimeOnly group: 'org.sosy-lab', name: 'javasmt-solver-z3', version: version.z3, classifier: 'libz3java', ext: 'so'
+
+    // Tell implementation config to use the JavaSMT + dependencies from our dependencies folder
+    implementation fileTree(dir: 'build/dependencies', include: '*.jar')
 
     // Kotlin version as an alternative. Both should be equal
 //    runtimeOnly("org/sosy-lab:javasmt-solver-z3:${version.z3}:com.microsoft.z3@jar")
@@ -103,16 +122,13 @@ dependencies {
 //    runtimeOnly group: 'io.github.uuverifiers', name: 'princess_2.13', version: version.princess, ext: 'jar'
 
     // Retrieve SMTInterpol
-    runtimeOnly group: 'de.uni-freiburg.informatik.ultimate', name: 'smtinterpol', version: version.smtInterpol, ext: 'jar'
+//    runtimeOnly group: 'de.uni-freiburg.informatik.ultimate', name: 'smtinterpol', version: version.smtInterpol, ext: 'jar'
 
     // Example as to how to use Yices2
     // First get JavaSMT for Yices2 from Maven (if you want to use only Yices2 use this dependency in the "implementation" part above instead of regual JavaSMT)
 //    runtimeOnly group: 'org.sosy-lab', name: 'javasmt-yices2', version: version.javasmtYices2, ext: 'jar'
     // And the Yices2 solver from Maven
 //    runtimeOnly group: 'org.sosy-lab', name: 'javasmt-solver-yices2', version: version.yices2, classifier: 'libyices2j', ext: 'so'
-
-    // Tell implementation config to use the JavaSMT + dependencies from our dependencies folder
-    implementation fileTree(dir: 'build/dependencies', include: '*.jar')
 }
 
 // Test with JUnit4 (see dependencies) and 1gig heap
@@ -131,8 +147,12 @@ task copyDependencies(type: Copy) {
     from configurations.javaSMTConfig
     into 'build/dependencies'
 //     Renames the dependencies
-//    rename '.*(lib[^-]*)-?.*.so', '$1.so'
+    // z3 mac
     rename '.*(lib[^-]*)-?.*.dylib', '$1.dylib'
+    // z3 win
+//    rename '.*(lib[^-]*)-?.*.dll', '$1.dll'
+    // z3 linux
+//    rename '.*(lib[^-]*)-?.*.so', '$1.so'
 }
 
 // Cleans the dependencies folder
