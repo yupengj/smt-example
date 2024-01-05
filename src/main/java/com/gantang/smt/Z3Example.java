@@ -53,6 +53,8 @@ public class Z3Example {
         NumeralFormula.IntegerFormula x = intFm.makeVariable("x");
         // 创建y变量
         NumeralFormula.IntegerFormula y = intFm.makeVariable("y");
+
+
         // 创建表达式约束 x+y >= 10
         BooleanFormula constraint1 = intFm.greaterOrEquals(intFm.add(x, y), intFm.makeNumber(10));
         // 创建表达式约束 x+y <= 50
@@ -61,6 +63,7 @@ public class Z3Example {
         prover.addConstraint(constraint1);
         prover.addConstraint(constraint2);
         prover.push();
+
 
         // 检查 x=3，y=5 不满足约束
         prover.addConstraint(intFm.equal(x, intFm.makeNumber(3)));
@@ -79,7 +82,10 @@ public class Z3Example {
         // 检查 x=20，y=10 满足约束
         prover.addConstraint(intFm.equal(x, intFm.makeNumber(20)));
         prover.addConstraint(intFm.equal(y, intFm.makeNumber(10)));
+        NumeralFormula.IntegerFormula multiply = intFm.multiply(x, y);
+        prover.addConstraint(intFm.equal(multiply, intFm.makeNumber(200)));
         isUnsat(prover);
+        System.out.println("x*y=" + multiply);
         prover.pop();
         prover.push();
 
